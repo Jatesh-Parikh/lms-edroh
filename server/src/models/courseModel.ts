@@ -45,3 +45,21 @@ const chapterSchema = new Schema({
         type: String
     }
 });
+
+const sectionSchema = new Schema({
+    sectionId: {
+        type: String,
+        required: true
+    },
+    sectionTitle: {
+        type: String,
+        required: true
+    },
+    sectionDescription: {
+        type: String,
+    },
+    chapters: {
+        type: Array,
+        schema: [chapterSchema]
+    },
+});
