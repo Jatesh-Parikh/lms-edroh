@@ -63,3 +63,68 @@ const sectionSchema = new Schema({
         schema: [chapterSchema]
     },
 });
+
+const courseSchema = new Schema({
+        courseId: {
+            type: String,
+            hashKey: true,
+            required: true
+        },
+        teacherId: {
+            type: String,
+            required: true
+        },
+        teacherName: {
+            type: String,
+            required: true
+        },
+        title: {
+            type: String,
+            required: true
+        },
+        description: {
+            type: String
+        },
+        category: {
+            type: String,
+            required: true
+        },
+        image: {
+            type: String,
+        },
+        price: {
+            type: Number,
+        },
+        level: {
+            type: String,
+            required: true,
+            enum: ["Beginner", "Intermediate", "Advanced"]
+        },
+        status: {
+            type: String,
+            required: true,
+            enum: ["Draft", "Published"]
+        },
+        sections: {
+            type: Array,
+            schema: [sectionSchema]
+        },
+        enrollments: {
+            type: Array,
+            schema: [
+                new Schema({
+                    userId: {
+                        type: String,
+                        required: true
+                    }
+                })
+            ]
+        }
+    }, 
+    {
+        timestamps: true
+    }
+);
+
+const Course = model("Course", courseSchema);
+export default Course;
