@@ -18,3 +18,30 @@ const commentSchema = new Schema({
         required: true
     }
 });
+
+const chapterSchema = new Schema({
+    chapterId: {
+        type: String,
+        required: true
+    },
+    type: {
+        type: String,
+        enum: ["Text", "Quiz", "Video"],
+        required: true
+    },
+    title: {
+        type: String,
+        required: true
+    },
+    content: {
+        type: String,
+        required: true
+    },
+    comments: {
+        type: Array,
+        schema: [commentSchema]
+    },
+    video: {
+        type: String
+    }
+});
