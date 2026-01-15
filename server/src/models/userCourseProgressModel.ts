@@ -49,7 +49,7 @@ const userCourseProgressSchema = new Schema(
         lastAccessedTimestamp: {
             type: String,
             required: true
-        }
+        },
     }, 
     {
         timestamps: true
