@@ -21,3 +21,40 @@ const sectionProgressSchema = new Schema({
         schema: [chapterProgressSchema]
     }
 });
+
+const userCourseProgressSchema = new Schema(
+    {
+        userId: {
+            type: String,
+            hashKey: true,
+            required: true
+        },
+        courseId: {
+            type: String,
+            rangeKey: true,
+            required: true
+        },
+        enrollmentDate: {
+            type: String,
+            required: true
+        },
+        overallProgress: {
+            type: Number,
+            required: true
+        },
+        sections: {
+            type: Array,
+            schema: [sectionProgressSchema],
+        },
+        lastAccessedTimestamp: {
+            type: String,
+            required: true
+        }
+    }, 
+    {
+        timestamps: true
+    }
+);
+
+const UserCourseProgress = model("UserCourseProgress", userCourseProgressSchema);
+export default UserCourseProgress;
