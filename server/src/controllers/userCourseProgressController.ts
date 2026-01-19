@@ -33,7 +33,7 @@ export const getUserCourseProgress = async (req: Request, res: Response): Promis
 
     try {
         const progress = await UserCourseProgress.get({ userId, courseId });
-        
+
         if(!progress) {
             res.status(404).json({ message: "Course progress not found for this user" });
             return;
@@ -48,4 +48,40 @@ export const getUserCourseProgress = async (req: Request, res: Response): Promis
     }
 };
 
-export const updateUserCourseProgress = async (req: Request, res: Response): Promise<void> => {};
+export const updateUserCourseProgress = async (req: Request, res: Response): Promise<void> => {
+    const userId = req.params.userId as string;
+    const courseId = req.params.courseId as string;
+
+    const progressData = req.body;
+
+    try {
+        let progress = await UserCourseProgress.get({ userId, courseId });
+
+        if(!progress) {
+            // Create initial progress
+            progress = new UserCourseProgress({
+                userId,
+                courseId,
+                enrollmentDate: new Date().toISOString(),
+                overallProgress: 0,
+                sections: progressData.sections || [],
+                lastAccessedTimestamp: new Date().toISOString()
+            });
+        } else {
+            // Merge existing progress with new progress data
+            progress.sections = mergeSections(progress.sections, progressData.sections || []);
+            progress.lastAccessedTimestamp = new Date().toISOString();
+            progress.overallProgress = calculateOverallProgress(progress.sections);
+        }
+
+        await progress.save();
+
+        res.json({
+            message: "",
+            data: progress
+        });
+    } catch (error) {
+        console.error("Error updating progress:", error);
+        res.status(500).json({ message: "Error updating user course progress", error });
+    }
+};
