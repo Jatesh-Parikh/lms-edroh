@@ -84,10 +84,12 @@ export const api = createApi({
             }),
             providesTags: ["Courses"]
         }),
+
         getCourse: build.query<Course, string>({
             query: (id) => `courses/${id}`,
             providesTags: (result, error, id) => [{ type: "Courses", id }],
         }),
+
         createCourse: build.mutation<Course, { teacherId: string, teacherName: string }>({
             query: (body) => ({
                 url: `courses`,
@@ -96,6 +98,7 @@ export const api = createApi({
             }),
             invalidatesTags: ["Courses"]
         }),
+
         updateCourse: build.mutation<Course, { courseId: string, formData: FormData }>({
             query: ({ courseId, formData }) => ({
                 url: `courses/${courseId}`,
@@ -106,6 +109,7 @@ export const api = createApi({
                 { type: "Courses", id: courseId }
             ],
         }),
+
         deleteCourse: build.mutation<{ message: string }, string>({
             query: (courseId) => ({
                 url: `courses/${courseId}`,
@@ -113,6 +117,7 @@ export const api = createApi({
             }),
             invalidatesTags: ["Courses"]
         }),
+
         getUploadVideoUrl: build.mutation<{ uploadUrl: string; videoUrl: string }, {
             courseId: string;
             chapterId: string;
@@ -125,7 +130,31 @@ export const api = createApi({
                 method: "POST",
                 body: { fileName, fileType }
             })
-        })
+        }),
 
+        /* 
+        ===============
+        TRANSACTIONS
+        =============== 
+        */
+        getTransactions: build.query<Transaction[], string>({
+            query: (userId) => `transactions?userId=${userId}`,
+        }),
+
+        createStripePaymentIntent: build.mutation<{ clientSecret: string }, { amount: number }>({
+            query: ({ amount }) => ({
+                url: `transactions/stripe/payment-intent`,
+                method: "POST",
+                body: { amount }
+            }),
+        }),
+
+        createTransaction: build.mutation<Transaction, Partial<Transaction>>({
+            query: (transaction) => ({
+                url: "transactions",
+                method: "POST",
+                body: transaction,
+            }),
+        }),
     }),
 })
