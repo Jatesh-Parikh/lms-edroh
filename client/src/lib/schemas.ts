@@ -19,3 +19,19 @@ export const chapterSchema = z.object({
 });
 
 export type ChapterFormData = z.infer<typeof chapterSchema>;
+
+// Section schemas
+export const sectionSchema = z.object({
+    title: z.string().min(2, "Title must be at least 2 characters"),
+    description: z.string().min(10, "Description must be at least 10 characters"),
+});
+
+export type SectionFormData = z.infer<typeof sectionSchema>;
+
+// Guest Checkout Schema
+export const guestSchema = z.object({
+    email: z.string().email("Inavlid email address"),
+});
+
+export type GuestFormData = z.infer<typeof guestSchema>;
+
